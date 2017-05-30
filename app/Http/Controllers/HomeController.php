@@ -11,8 +11,7 @@ class HomeController
     {
         $file = __DIR__ . '/../../../storage/logs/laravel.log';
 
-
-        return View::make('welcome', ['logs' => LogReader::tail($file)]);
+        return View::make('welcome', ['logs' => LogReader::tail($file), 'defaultFile' => 'storage/logs/laravel.log']);
 
     }
 }
