@@ -103,8 +103,8 @@
         <pre id="logContainer">{{ $logs }}</pre>
 
         <div class="paging">
-            <input id="first" type="button" onclick="loadLines(-1)" value="|<" disabled>
-            <input id="prev" type="button" onclick="loadLines(-10)" value="<" disabled>
+            <input id="first" type="button" onclick="loadLines(-1)" value="|<">
+            <input id="prev" type="button" onclick="loadLines(-10)" value="<">
             <input id="next" type="button" onclick="loadLines(10)" value=">">
             <input id="last" type="button" onclick="loadLines(0)" value=">|">
         </div>
@@ -146,8 +146,8 @@
 
     function updatePaging(logPos) {
         console.log(logPos);
-        document.getElementById('prev').disabled = logPos <= 10;
-        document.getElementById('first').disabled = logPos <= 10;
+//        document.getElementById('prev').disabled = logPos <= 10;
+//        document.getElementById('first').disabled = logPos <= 10;
     }
 
 </script>

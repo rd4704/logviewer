@@ -28,8 +28,15 @@ class LogReader
 
         $fileHandler = new SplFileObject($filename);
 
-        // Seek to end of file minus line offsets
-        $fileHandler->seek(count(file($filename)) - ($lines + $offset));
+        if ($offset === 0) {
+            $fileHandler->seek(count(file($filename)) - $lines);
+        }
+        elseif ($offset === -1) {
+            $fileHandler->seek(0);
+        } else {
+            // Seek to end of file minus line offsets
+            $fileHandler->seek(count(file($filename)) - ($lines + $offset));
+        }
 
         // Append each line to the output
         $output = '';

@@ -25,13 +25,20 @@ class HomeController
 
     public function fetchLog(Request $request)
     {
-        $offset = intval($request->input('offset'));
         $file = $request->input('file');
         $file = __DIR__ . '/../../../storage/logs/' . $file;
+        $offset = intval($request->input('offset'));
 
-        $currentLogPos = intval($request->session()->get('logPos'));
-        $request->session()->put('logPos', $currentLogPos + $offset);
+        if ($offset === 0) {
+            $gotoOffset = 0;
+        } elseif ($offset === -1) {
+            $gotoOffset = -1;
+        } else {
+            $gotoOffset = intval($request->session()->get('logPos')) + $offset;
+        }
 
-        return json_encode(LogReader::tail($file, 10, $currentLogPos + $offset));
+        $request->session()->put('logPos', $gotoOffset);
+
+        return json_encode(LogReader::tail($file, 10, $gotoOffset));
     }
 }
