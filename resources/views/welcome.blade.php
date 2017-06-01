@@ -54,9 +54,10 @@
 
         pre .line-number {
             float: left;
-            margin: 0 1em 0 -1em;
+            margin: 2px 1em 0 -1em;
             border-right: 1px solid;
             text-align: right;
+            line-height: 1.25em;
         }
 
         pre .line-number span {
@@ -81,6 +82,7 @@
         input[type='button'] {
             width: 20%;
         }
+
         .file-selector {
             padding: 10px 10px 10px 0;
         }
@@ -98,18 +100,38 @@
             <input type="button" value="View">
         </div>
 
-        <pre><code>{{ $logs }} </code></pre>
+        <pre id="logContainer">{{ $logs }}</pre>
 
         <div class="paging">
-            <input type="button" value="|<">
-            <input type="button" value="<">
-            <input type="button" value=">">
-            <input type="button" value=">|">
+            <input id="first" type="button" onclick="loadLines(-1)" value="|<" disabled>
+            <input id="prev" type="button" onclick="loadLines(-10)" value="<" disabled>
+            <input id="next" type="button" onclick="loadLines(10)" value=">">
+            <input id="last" type="button" onclick="loadLines(0)" value=">|">
         </div>
     </div>
 </div>
 <script>
     (function () {
+        beautifyLogViewer();
+    })();
+
+    function loadLines(offset) {
+        if (offset.length !== 0) {
+            var xmlhttp = new XMLHttpRequest();
+            xmlhttp.onreadystatechange = function () {
+                if (this.readyState == 4 && this.status == 200) {
+                    var jsonResponse = JSON.parse(this.responseText);
+                    document.getElementById("logContainer").innerHTML = jsonResponse.log;
+                    updatePaging(jsonResponse.logPos);
+                    beautifyLogViewer();
+                }
+            };
+            xmlhttp.open("GET", "/fetchlog/?file=access_log&offset=" + offset, true);
+            xmlhttp.send();
+        }
+    }
+
+    function beautifyLogViewer() {
         var pre = document.getElementsByTagName('pre'),
                 pl = pre.length;
         for (var i = 0; i < pl; i++) {
@@ -120,7 +142,14 @@
                 line_num.innerHTML += '<span>' + (j + 1) + '</span>';
             }
         }
-    })();
+    }
+
+    function updatePaging(logPos) {
+        console.log(logPos);
+        document.getElementById('prev').disabled = logPos <= 10;
+        document.getElementById('first').disabled = logPos <= 10;
+    }
+
 </script>
 </body>
 </html>
