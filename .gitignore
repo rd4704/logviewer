@@ -11,4 +11,3 @@ npm-debug.log
 .env
 /storage/app
 /storage/framework
-/storage/logs/laravel.log

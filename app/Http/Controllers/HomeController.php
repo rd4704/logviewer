@@ -8,9 +8,11 @@ use Rahul\Util\LogReader;
 
 class HomeController
 {
+    private $prefix = __DIR__ . '/../../../storage';
+
     public function index(Request $request)
     {
-        $file = __DIR__ . '/../../../storage/logs/access_log';
+        $file = $this->prefix . '/logs/access_log';
         $data = LogReader::tail($file, 10, 0, LogReader::FIRST);
         $request->session()->put('logPos', $data['logPos']);
 
@@ -18,7 +20,7 @@ class HomeController
             'welcome',
             [
                 'logs' => $data['log'],
-                'defaultFile' => '/storage/logs/access_log',
+                'defaultFile' => '/logs/access_log',
             ]
         );
     }
@@ -26,7 +28,7 @@ class HomeController
     public function fetchLog(Request $request)
     {
         $file = $request->input('file');
-        $file = __DIR__ . '/../../../storage/logs/' . $file;
+        $file = $this->prefix . $file;
         $command = $request->input('seek');
 
         $currentPos = intval($request->session()->get('logPos'));

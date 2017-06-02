@@ -20,38 +20,31 @@
             height: 100vh;
             margin: 0;
         }
-
         .full-height {
             height: 100vh;
         }
-
         .title {
             font-size: 48px;
         }
-
         .m-b-md {
             margin-bottom: 30px;
         }
-
         body {
             background-color: white;
             padding: 50px 15%
         }
-
         pre {
             background-color: #eee;
             overflow: auto;
             margin: 0 0 1em;
             padding: .5em 1em;
         }
-
         pre code,
         pre .line-number {
             font: normal normal 12px/14px "Courier New", Courier, Monospace;
             color: black;
             display: block;
         }
-
         pre .line-number {
             float: left;
             margin: 2px 1em 0 -1em;
@@ -59,32 +52,29 @@
             text-align: right;
             line-height: 1.25em;
         }
-
         pre .line-number span {
             display: block;
             padding: 0 .5em 0 1em;
         }
-
         pre .cl {
             display: block;
             clear: both;
         }
-
         input {
             font-size: 16px;
             font-family: 'Raleway', sans-serif;
         }
-
         input[type='text'] {
             width: 75%;
         }
-
         input[type='button'] {
             width: 20%;
         }
-
         .file-selector {
             padding: 10px 10px 10px 0;
+        }
+        .hints{
+            padding-top: 50px;
         }
     </style>
 </head>
@@ -96,8 +86,8 @@
         </div>
 
         <div class="file-selector">
-            <input type="text" placeholder="/path/to/file" value="{{ $defaultFile }}">
-            <input type="button" value="View">
+            <input id="filePath" type="text" placeholder="/path/to/file" value="{{ $defaultFile }}">
+            <input type="button" onclick="loadFile()" value="View">
         </div>
 
         <pre id="logContainer">{{ $logs }}</pre>
@@ -108,48 +98,19 @@
             <input id="next" type="button" onclick="loadLines(this.getAttribute('id'))" value=">">
             <input id="last" type="button" onclick="loadLines(this.getAttribute('id'))" value=">|">
         </div>
+
+        <div class="hints">
+            Server log files available :
+            <ul>
+                <li>/logs/access_log</li>
+                <li>/logs/laravel.log</li>
+            </ul>
+
+            <br/>
+            Copy and paste any of the above to read the log.
+        </div>
     </div>
 </div>
-<script>
-    (function () {
-        beautifyLogViewer();
-    })();
-
-    function loadLines(seek) {
-        var xmlhttp = new XMLHttpRequest();
-        xmlhttp.onreadystatechange = function () {
-            if (this.readyState == 4 && this.status == 200) {
-                var jsonResponse = JSON.parse(this.responseText);
-                document.getElementById("logContainer").innerHTML = jsonResponse.log;
-                updatePaging(jsonResponse.logPos, jsonResponse.isEOF);
-                beautifyLogViewer();
-            }
-        };
-        xmlhttp.open("GET", "/fetchlog/?file=access_log&seek=" + seek, true);
-        xmlhttp.send();
-    }
-
-    function beautifyLogViewer() {
-        var pre = document.getElementsByTagName('pre'),
-                pl = pre.length;
-        for (var i = 0; i < pl; i++) {
-            pre[i].innerHTML = '<span class="line-number"></span>' + pre[i].innerHTML + '<span class="cl"></span>';
-            var num = pre[i].innerHTML.split(/\n/).length;
-            for (var j = 0; j < num; j++) {
-                var line_num = pre[i].getElementsByTagName('span')[0];
-                line_num.innerHTML += '<span>' + (j + 1) + '</span>';
-            }
-        }
-    }
-
-    function updatePaging(logPos, isEOF) {
-        console.log(logPos);
-        document.getElementById('first').disabled = logPos <= 0;
-        document.getElementById('prev').disabled = logPos <= 0;
-        document.getElementById('next').disabled = isEOF;
-        document.getElementById('last').disabled = isEOF;
-    }
-
-</script>
+<script src="/js/main.js"></script>
 </body>
 </html>
