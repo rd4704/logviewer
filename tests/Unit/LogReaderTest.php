@@ -28,16 +28,17 @@ class LogReaderTest extends TestCase
 
     public function provideSampleLogData()
     {
-        $expectedLog = '10.0.0.153 - - [12/Mar/2004:12:23:41 -0800] "GET /dccstats/stats-spam.1month.png HTTP/1.1" 200 2651
-    10.0.0.153 - - [12/Mar/2004:12:23:41 -0800] "GET /dccstats/stats-spam-ratio.1month.png HTTP/1.1" 200 2023
-    10.0.0.153 - - [12/Mar/2004:12:23:41 -0800] "GET /dccstats/stats-hashes.1month.png HTTP/1.1" 200 1636
-    10.0.0.153 - - [12/Mar/2004:12:23:41 -0800] "GET /dccstats/stats-spam.1year.png HTTP/1.1" 200 2262
-    10.0.0.153 - - [12/Mar/2004:12:23:41 -0800] "GET /dccstats/stats-spam-ratio.1year.png HTTP/1.1" 200 1906
-    10.0.0.153 - - [12/Mar/2004:12:23:41 -0800] "GET /dccstats/stats-hashes.1year.png HTTP/1.1" 200 1582
-    216.139.185.45 - - [12/Mar/2004:13:04:01 -0800] "GET /mailman/listinfo/webber HTTP/1.1" 200 6051
-    pd95f99f2.dip.t-dialin.net - - [12/Mar/2004:13:18:57 -0800] "GET /razor.html HTTP/1.1" 200 2869
-    d97082.upc-d.chello.nl - - [12/Mar/2004:13:25:45 -0800] "GET /SpamAssassin.html HTTP/1.1" 200 7368
-    ';
+        $expectedLog = '64.242.88.10 - - [07/Mar/2004:16:32:50 -0800] "GET /twiki/bin/view/Main/WebChanges HTTP/1.1" 200 40520
+                        64.242.88.10 - - [07/Mar/2004:16:33:53 -0800] "GET /twiki/bin/edit/Main/Smtpd_etrn_restrictions?topicparent=Main.ConfigurationVariables HTTP/1.1" 401 12851
+                        64.242.88.10 - - [07/Mar/2004:16:35:19 -0800] "GET /mailman/listinfo/business HTTP/1.1" 200 6379
+                        64.242.88.10 - - [07/Mar/2004:16:36:22 -0800] "GET /twiki/bin/rdiff/Main/WebIndex?rev1=1.2&rev2=1.1 HTTP/1.1" 200 46373
+                        64.242.88.10 - - [07/Mar/2004:16:37:27 -0800] "GET /twiki/bin/view/TWiki/DontNotify HTTP/1.1" 200 4140
+                        64.242.88.10 - - [07/Mar/2004:16:39:24 -0800] "GET /twiki/bin/view/Main/TokyoOffice HTTP/1.1" 200 3853
+                        64.242.88.10 - - [07/Mar/2004:16:43:54 -0800] "GET /twiki/bin/view/Main/MikeMannix HTTP/1.1" 200 3686
+                        64.242.88.10 - - [07/Mar/2004:16:45:56 -0800] "GET /twiki/bin/attach/Main/PostfixCommands HTTP/1.1" 401 12846
+                        64.242.88.10 - - [07/Mar/2004:16:47:12 -0800] "GET /robots.txt HTTP/1.1" 200 68
+                        64.242.88.10 - - [07/Mar/2004:16:47:46 -0800] "GET /twiki/bin/rdiff/Know/ReadmeFirst?rev1=1.5&rev2=1.4 HTTP/1.1" 200 5724
+                        ';
 
         return [
             [
@@ -45,6 +46,11 @@ class LogReaderTest extends TestCase
                 'logPos' => 10,
                 'lines' => $expectedLog,
             ],
+            [
+                'path' => 'invalid/path',
+                'logPos' => 0,
+                'lines' => false
+            ]
         ];
     }
 }

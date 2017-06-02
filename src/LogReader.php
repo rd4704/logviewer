@@ -6,14 +6,23 @@ use SplFileObject;
 
 class LogReader
 {
+    /*
+     * Constants
+     */
+    const PREV = 'prev';
+    const NEXT = 'next';
+    const FIRST = 'first';
+    const LAST = 'last';
+
     /**
      * @param $filename
      * @param int $lines
-     * @param int $offset
+     * @param int $currentPos
+     * @param string $command
      *
-     * @return bool|array
+     * @return array|bool
      */
-    public static function tail($filename, $lines = 10, $offset = 0)
+    public static function tail($filename, $lines = 10, $currentPos = 0, $command = self::NEXT)
     {
         // Check if file exists
         if (!is_file($filename)) {
@@ -28,26 +37,35 @@ class LogReader
 
         $fileHandler = new SplFileObject($filename);
 
-        if ($offset === 0) {
-            $fileHandler->seek(count(file($filename)) - $lines);
+        switch ($command) {
+            case self::PREV:
+                $currentPos -= $lines;
+                break;
+            case self::NEXT:
+                $currentPos += $lines;
+                break;
+            case self::LAST:
+                $currentPos = count(file($filename)) - $lines;
+                break;
+            default:
+                $currentPos = 0;
+                break;
         }
-        elseif ($offset === -1) {
-            $fileHandler->seek(0);
-        } else {
-            // Seek to end of file minus line offsets
-            $fileHandler->seek(count(file($filename)) - ($lines + $offset));
-        }
+
+        $fileHandler->seek($currentPos !== 0 ? $currentPos - 1 : $currentPos);
 
         // Append each line to the output
         $output = '';
-        for ($i = 1; $i < $lines; $i++) {
+        for ($i = 0; $i < $lines; $i++) {
             $fileHandler->next();
             $output .= $fileHandler->current();
         }
 
+        $isEOF = (count(file($filename)) - $lines) <= $currentPos;
+
         // close file
         $fileHandler = null;
 
-        return ['log' => $output, 'logPos' => $offset + $lines];
+        return ['log' => $output, 'logPos' => $currentPos, 'isEOF' => $isEOF];
     }
 }

@@ -103,10 +103,10 @@
         <pre id="logContainer">{{ $logs }}</pre>
 
         <div class="paging">
-            <input id="first" type="button" onclick="loadLines(-1)" value="|<">
-            <input id="prev" type="button" onclick="loadLines(-10)" value="<">
-            <input id="next" type="button" onclick="loadLines(10)" value=">">
-            <input id="last" type="button" onclick="loadLines(0)" value=">|">
+            <input id="first" type="button" onclick="loadLines(this.getAttribute('id'))" value="|<" disabled>
+            <input id="prev" type="button" onclick="loadLines(this.getAttribute('id'))" value="<" disabled>
+            <input id="next" type="button" onclick="loadLines(this.getAttribute('id'))" value=">">
+            <input id="last" type="button" onclick="loadLines(this.getAttribute('id'))" value=">|">
         </div>
     </div>
 </div>
@@ -115,20 +115,18 @@
         beautifyLogViewer();
     })();
 
-    function loadLines(offset) {
-        if (offset.length !== 0) {
-            var xmlhttp = new XMLHttpRequest();
-            xmlhttp.onreadystatechange = function () {
-                if (this.readyState == 4 && this.status == 200) {
-                    var jsonResponse = JSON.parse(this.responseText);
-                    document.getElementById("logContainer").innerHTML = jsonResponse.log;
-                    updatePaging(jsonResponse.logPos);
-                    beautifyLogViewer();
-                }
-            };
-            xmlhttp.open("GET", "/fetchlog/?file=access_log&offset=" + offset, true);
-            xmlhttp.send();
-        }
+    function loadLines(seek) {
+        var xmlhttp = new XMLHttpRequest();
+        xmlhttp.onreadystatechange = function () {
+            if (this.readyState == 4 && this.status == 200) {
+                var jsonResponse = JSON.parse(this.responseText);
+                document.getElementById("logContainer").innerHTML = jsonResponse.log;
+                updatePaging(jsonResponse.logPos, jsonResponse.isEOF);
+                beautifyLogViewer();
+            }
+        };
+        xmlhttp.open("GET", "/fetchlog/?file=access_log&seek=" + seek, true);
+        xmlhttp.send();
     }
 
     function beautifyLogViewer() {
@@ -144,10 +142,12 @@
         }
     }
 
-    function updatePaging(logPos) {
+    function updatePaging(logPos, isEOF) {
         console.log(logPos);
-//        document.getElementById('prev').disabled = logPos <= 10;
-//        document.getElementById('first').disabled = logPos <= 10;
+        document.getElementById('first').disabled = logPos <= 0;
+        document.getElementById('prev').disabled = logPos <= 0;
+        document.getElementById('next').disabled = isEOF;
+        document.getElementById('last').disabled = isEOF;
     }
 
 </script>

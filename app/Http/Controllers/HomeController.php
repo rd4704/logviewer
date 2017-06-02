@@ -11,13 +11,13 @@ class HomeController
     public function index(Request $request)
     {
         $file = __DIR__ . '/../../../storage/logs/access_log';
-
-        $request->session()->put('logPos', 0);
+        $data = LogReader::tail($file, 10, 0, LogReader::FIRST);
+        $request->session()->put('logPos', $data['logPos']);
 
         return View::make(
             'welcome',
             [
-                'logs' => LogReader::tail($file, 10, 0)['log'],
+                'logs' => $data['log'],
                 'defaultFile' => '/storage/logs/access_log',
             ]
         );
@@ -27,18 +27,14 @@ class HomeController
     {
         $file = $request->input('file');
         $file = __DIR__ . '/../../../storage/logs/' . $file;
-        $offset = intval($request->input('offset'));
+        $command = $request->input('seek');
 
-        if ($offset === 0) {
-            $gotoOffset = 0;
-        } elseif ($offset === -1) {
-            $gotoOffset = -1;
-        } else {
-            $gotoOffset = intval($request->session()->get('logPos')) + $offset;
-        }
+        $currentPos = intval($request->session()->get('logPos'));
 
-        $request->session()->put('logPos', $gotoOffset);
+        $result = LogReader::tail($file, 10, $currentPos, $command);
 
-        return json_encode(LogReader::tail($file, 10, $gotoOffset));
+        $request->session()->put('logPos', $result['logPos']);
+
+        return json_encode($result);
     }
 }
