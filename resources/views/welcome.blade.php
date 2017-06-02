@@ -69,6 +69,14 @@
         }
         input[type='button'] {
             width: 20%;
+            color: #fff;
+            background-color: #d9534f;
+            border-color: #d43f3a;
+            font-weight: 700;
+        }
+        input[type='button']:disabled {
+            background: #ccc;
+            border-color: #ccc;
         }
         .file-selector {
             padding: 10px 10px 10px 0;
