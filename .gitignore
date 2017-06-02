@@ -9,4 +9,6 @@ Homestead.json
 Homestead.yaml
 npm-debug.log
 .env
-/storage
+/storage/app
+/storage/framework
+/storage/logs/laravel.log
