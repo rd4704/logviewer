@@ -22,7 +22,7 @@ class LogReader
      *
      * @return array|bool
      */
-    public static function tail($filename, $lines = 10, $currentPos = 0, $command = self::NEXT)
+    public static function head($filename, $lines = 10, $currentPos = 0, $command = self::NEXT)
     {
         // Check if file exists
         if (!is_file($filename)) {

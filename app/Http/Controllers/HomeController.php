@@ -13,7 +13,7 @@ class HomeController
     public function index(Request $request)
     {
         $file = $this->prefix . '/logs/access_log';
-        $data = LogReader::tail($file, 10, 0, LogReader::FIRST);
+        $data = LogReader::head($file, 10, 0, LogReader::FIRST);
         $request->session()->put('logPos', $data['logPos']);
 
         return View::make(
@@ -33,7 +33,7 @@ class HomeController
 
         $currentPos = intval($request->session()->get('logPos'));
 
-        $result = LogReader::tail($file, 10, $currentPos, $command);
+        $result = LogReader::head($file, 10, $currentPos, $command);
 
         $request->session()->put('logPos', $result['logPos']);
 

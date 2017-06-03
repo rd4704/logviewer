@@ -19,7 +19,7 @@ class LogReaderTest extends TestCase
      */
     public function shouldReturnCorrectLogAndLinePosition($path, $logpos, $lines)
     {
-        $result = LogReader::tail($path, $logpos, 0);
+        $result = LogReader::head($path, $logpos, 0);
 
         $this->assertEquals(preg_replace('/\s+/S', " ", $lines), preg_replace('/\s+/S', " ", $result['log']));
 

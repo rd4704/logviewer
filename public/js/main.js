@@ -3,7 +3,7 @@
  */
 
 (function () {
-    beautifyLogViewer();
+    beautifyLogViewer(0);
 })();
 
 function loadLines(seek) {
@@ -14,14 +14,14 @@ function loadLines(seek) {
             var jsonResponse = JSON.parse(this.responseText);
             document.getElementById("logContainer").innerHTML = jsonResponse.log;
             updatePaging(jsonResponse.logPos, jsonResponse.isEOF);
-            beautifyLogViewer();
+            beautifyLogViewer(parseInt(jsonResponse.logPos));
         }
     };
     xmlhttp.open("GET", "/fetchlog/?file=" + filename + "&seek=" + seek, true);
     xmlhttp.send();
 }
 
-function beautifyLogViewer() {
+function beautifyLogViewer(logPos) {
     var pre = document.getElementsByTagName('pre'),
         pl = pre.length;
     for (var i = 0; i < pl; i++) {
@@ -29,7 +29,7 @@ function beautifyLogViewer() {
         var num = pre[i].innerHTML.split(/\n/).length;
         for (var j = 0; j < num; j++) {
             var line_num = pre[i].getElementsByTagName('span')[0];
-            line_num.innerHTML += '<span>' + (j + 1) + '</span>';
+            line_num.innerHTML += '<span>' + (logPos + j + 1) + '</span>';
         }
     }
 }
