@@ -66,6 +66,7 @@
         }
         input[type='text'] {
             width: 75%;
+            border: 1px solid #ccc;
         }
         input[type='button'] {
             width: 20%;
@@ -112,10 +113,11 @@
             <ul>
                 <li>/logs/access_log</li>
                 <li>/logs/laravel.log</li>
+                <li>/logs/big.txt</li>
             </ul>
 
             <br/>
-            Copy and paste any of the above to read the log.
+            Copy and paste any of the above paths to read the log.
         </div>
     </div>
 </div>
